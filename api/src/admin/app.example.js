@@ -1,4 +1,4 @@
-const config = {
+pm2 logsconst config = {
   locales: [
     // 'ar',
     // 'fr',

@@ -52,7 +52,7 @@ export default function BlogHomepage() {
     const fetchArticles = async () => {
       try {
         const response = await axios.get<ApiResponse>(
-          `https://susurros-api.onrender.com/api/articles?populate=*`
+          `${process.env.NEXT_PUBLIC_API_URL}/articles?populate=*`
         );
         setArticles(response.data.data);
         setIsLoading(false);

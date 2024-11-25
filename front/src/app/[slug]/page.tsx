@@ -23,7 +23,7 @@ import {
 async function getArticle(slug: string) {
   try {
     const response = await axios.get(
-      `https://susurros-api.onrender.com/api/articles?filters[slug]=${slug}&populate=*`
+      `${process.env.NEXT_PUBLIC_API_URL}/articles?filters[slug]=${slug}&populate=*`
     );
     return response.data.data[0];
   } catch (error) {
