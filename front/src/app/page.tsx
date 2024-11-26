@@ -23,6 +23,13 @@ interface Article {
     description: string;
     slug: string;
     createdAt: string;
+    writer: {
+      data: {
+        attributes: {
+          name: string;
+        };
+      };
+    }
     img: {
       data: ArticleImage[];
     };
@@ -47,6 +54,7 @@ export default function BlogHomepage() {
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
 
+
   useEffect(() => {
     setMounted(true);
     const fetchArticles = async () => {
@@ -54,7 +62,10 @@ export default function BlogHomepage() {
         const response = await axios.get<ApiResponse>(
           `${process.env.NEXT_PUBLIC_API_URL}/articles?populate=*`
         );
-        setArticles(response.data.data);
+        const sortedArticles = response.data.data.sort(
+          (a, b) => new Date(b.attributes.createdAt).getTime() - new Date(a.attributes.createdAt).getTime()
+        );
+        setArticles(sortedArticles);
         setIsLoading(false);
       } catch (error) {
         setError(
@@ -66,6 +77,9 @@ export default function BlogHomepage() {
 
     fetchArticles();
   }, []);
+
+  console.log(articles);
+
 
   // Evita la renderización hasta que el componente esté montado
   if (!mounted) return null;
@@ -83,7 +97,7 @@ export default function BlogHomepage() {
       <div className="container mx-auto px-4 py-8">
         <header className="mb-12 flex justify-between items-center text-center">
           <div className="text-center w-full">
-            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+            <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl mx-16 sm:mx-0">
               Susurros en Papel
             </h1>
             <p className="mt-4 text-xl text-muted-foreground">
@@ -117,6 +131,11 @@ export default function BlogHomepage() {
                 <CardTitle className="text-xl">
                   {article.attributes.title}
                 </CardTitle>
+              {article && (
+                <span className="text-sm text-muted-foreground">
+                  Por {article.attributes.writer.data.attributes.name}
+                </span>
+              )}
               </CardHeader>
               <CardContent className="flex-grow">
                 <p className="text-muted-foreground mb-4">
