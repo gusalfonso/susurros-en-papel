@@ -78,8 +78,6 @@ export default function BlogHomepage() {
     fetchArticles();
   }, []);
 
-  console.log(articles);
-
 
   // Evita la renderización hasta que el componente esté montado
   if (!mounted) return null;
